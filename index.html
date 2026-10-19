@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>looseScrew // EyeOverthink Media, Music & Code Lab</title>
+  <style>
+    :root {
+      --bg-void: #05070a;
+      --bg-panel: #0c1017;
+      --bg-card: #121822;
+      --bg-hover: #1a2332;
+      --cyan-neon: #00f3ff;
+      --cyan-dim: rgba(0, 243, 255, 0.16);
+      --green-hat: #2d3e2e;
+      --amber-screw: #ffb800;
+      --crimson: #ff2a6d;
+      --text-main: #e6f1ff;
+      --text-muted: #7d8da6;
+      --border-glow: 1px solid rgba(0, 243, 255, 0.28);
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP STUDIO NAVBAR */
+    header {
+      height: 64px;
+      background: rgba(12, 16, 23, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .screw-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--green-hat);
+      border: 2px solid var(--cyan-neon);
+      box-shadow: 0 0 12px var(--cyan-neon);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-weight: 900;
+      color: var(--cyan-neon);
+      transform: rotate(-18deg);
+      transition: transform 0.3s ease;
+    }
+    .brand:hover .screw-icon { transform: rotate(162deg) scale(1.08); }
+    .brand-title {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .brand-title span { color: var(--cyan-neon); text-shadow: 0 0 8px var(--cyan-neon); }
+    .brand-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      display: block;
+    }
+
+    .search-bar {
+      flex: 0 1 460px;
+      display: flex;
+      background: var(--bg-void);
+      border: 1px solid #263245;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .search-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      padding: 9px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .search-bar button {
+      background: var(--bg-card);
+      border: none;
+      border-left: 1px solid #263245;
+      color: var(--cyan-neon);
+      padding: 0 16px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pill-btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid #2a394f;
+      padding: 7px 13px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .pill-btn:hover, .pill-btn.active {
+      border-color: var(--cyan-neon);
+      color: var(--cyan-neon);
+      box-shadow: 0 0 10px var(--cyan-dim);
+    }
+
+    /* MAIN WORKSPACE GRID */
+    .workspace {
+      display: grid;
+      grid-template-columns: 240px 1fr 350px;
+      gap: 18px;
+      padding: 18px;
+      flex: 1;
+    }
+    @media (max-width: 1200px) {
+      .workspace { grid-template-columns: 1fr; }
+    }
+
+    /* LEFT SIDEBAR: CHANNELS & TELEMETRY */
+    .sidebar {
+      background: var(--bg-panel);
+      border: 1px solid #1b2535;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: fit-content;
+    }
+    .side-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .channel-btn {
+      width: 100%;
+      text-align: left;
+      padding: 11px 12px;
+      border-radius: 7px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+    .channel-btn:hover { background: var(--bg-hover); }
+    .channel-btn.active {
+      background: rgba(0, 243, 255, 0.1);
+      border-color: var(--cyan-neon);
+      color: var(--cyan-neon);
+    }
+    .badge {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #1c2738;
+      color: var(--cyan-neon);
+    }
+
+    .lazarus-box {
+      background: var(--bg-void);
+      border: 1px solid #1e2c3f;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      line-height: 1.5;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+    .stat-row strong { color: var(--cyan-neon); }
+
+    /* CENTER STAGE: MAIN PLAYER + FEED */
+    .center-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .stage-container {
+      background: var(--bg-panel);
+      border: var(--border-glow);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+    }
+    .viewport-wrapper {
+      position: relative;
+      width: 100%;
+      height: 430px;
+      background: #020305;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #stageCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* CODE & REA OVERLAY WORKBENCH INSIDE STAGE */
+    #codeWorkbench {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 9, 14, 0.96);
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid #1e2c3f;
+    }
+    #codeWorkbench.visible { display: grid; }
+    .code-pane {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #1e2c3f;
+      padding: 12px;
+      overflow: hidden;
+    }
+    .pane-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--cyan-neon);
+      padding-bottom: 8px;
+      border-bottom: 1px solid #1c2636;
+      margin-bottom: 8px;
+    }
+    #liveCodeEditor {
+      flex: 1;
+      width: 100%;
+      background: #05070b;
+      color: #a6e22e;
+      border: 1px solid #1a2536;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      resize: none;
+      outline: none;
+      line-height: 1.45;
+    }
+    .rea-trace-output {
+      flex: 1;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: #d1e0f5;
+      background: #05070b;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #1a2536;
+      white-space: pre-wrap;
+    }
+
+    /* PLAYER CONTROLS & METADATA */
+    .player-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: #080b10;
+      border-top: 1px solid #1a2433;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+    .scrubber {
+      flex: 1;
+      accent-color: var(--cyan-neon);
+      cursor: pointer;
+    }
+    .stage-meta {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .stage-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .stage-tags {
+      display: flex;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--cyan-neon);
+    }
+    .engagement-bar {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* MEDIA GRID */
+    .feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+    }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+      gap: 16px;
+    }
+    .media-card {
+      background: var(--bg-card);
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .media-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--cyan-neon);
+      box-shadow: 0 6px 20px rgba(0, 243, 255, 0.14);
+    }
+    .card-thumb {
+      height: 145px;
+      background: #06090e;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 1px solid #1b2535;
+    }
+    .card-type-pill {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(5, 7, 10, 0.85);
+      border: 1px solid var(--cyan-neon);
+      color: var(--cyan-neon);
+    }
+    .card-duration {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.85);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+    }
+    .card-body {
+      padding: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-size: 0.94rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+    .card-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* RIGHT COLUMN: BRAND AVATAR HOST & AKASHIC STREAM */
+    .avatar-studio {
+      background: var(--bg-panel);
+      border: var(--border-glow);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      height: fit-content;
+      position: sticky;
+      top: 82px;
+    }
+    .avatar-stage {
+      position: relative;
+      width: 100%;
+      height: 270px;
+      background: #000000;
+      border-radius: 10px;
+      border: 2px solid var(--cyan-neon);
+      box-shadow: 0 0 22px rgba(0, 243, 255, 0.25) inset, 0 0 15px rgba(0, 243, 255, 0.2);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #avatarCanvas {
+      width: 240px;
+      height: 260px;
+      image-rendering: pixelated;
+    }
+    #customAvatarImg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+      display: none;
+    }
+    .on-air-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(5, 7, 10, 0.88);
+      border: 1px solid var(--cyan-neon);
+      color: var(--cyan-neon);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan-neon);
+      box-shadow: 0 0 8px var(--cyan-neon);
+      animation: blink 1.2s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0.25; } }
+
+    .speech-bubble {
+      background: #070b11;
+      border-left: 3px solid var(--cyan-neon);
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      color: #d6ecff;
+      min-height: 64px;
+    }
+    .tts-box {
+      display: flex;
+      gap: 6px;
+    }
+    .tts-box input {
+      flex: 1;
+      background: var(--bg-void);
+      border: 1px solid #253347;
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+    .avatar-upload-label {
+      display: block;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      border: 1px dashed #2a394e;
+      padding: 7px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .avatar-upload-label:hover {
+      border-color: var(--cyan-neon);
+      color: var(--cyan-neon);
+    }
+    .akashic-log {
+      max-height: 180px;
+      overflow-y: auto;
+      background: var(--bg-void);
+      border: 1px solid #1a2433;
+      border-radius: 6px;
+      padding: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .akashic-entry span { color: var(--cyan-neon); }
+  </style>
+</head>
+<body>
+
+  <!-- TOP STUDIO HEADER -->
+  <header>
+    <div class="brand" onclick="filterChannel('ALL')">
+      <div class="screw-icon">⚙</div>
+      <div>
+        <div class="brand-title">loose<span>Screw</span></div>
+        <span class="brand-sub">EYEOVERTHINK // MUSIC • VIDEO • CODE & REA</span>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search tracks, video streams, REA reverse-engineering specs..." oninput="renderMediaGrid()" />
+      <button onclick="renderMediaGrid()">SCAN</button>
+    </div>
+
+    <div class="nav-actions">
+      <button class="pill-btn" onclick="triggerThermalInjection()">⚡ Thermal Inject</button>
+      <button class="pill-btn" onclick="openUploadModal()">+ Ingest Media</button>
+    </div>
+  </header>
+
+  <!-- MAIN 3-COLUMN WORKSPACE -->
+  <div class="workspace">
+
+    <!-- LEFT SIDEBAR: CHANNELS & LAZARUS ENGINE -->
+    <aside class="sidebar">
+      <div>
+        <div class="side-label">Broadcast Channels</div>
+        <button class="channel-btn active" id="btn-ALL" onclick="filterChannel('ALL')">
+          <span>◈ All Transmissions</span>
+          <span class="badge" id="count-ALL">6</span>
+        </button>
+        <button class="channel-btn" id="btn-MUSIC" onclick="filterChannel('MUSIC')">
+          <span>♫ Music Studio</span>
+          <span class="badge">SYNTH</span>
+        </button>
+        <button class="channel-btn" id="btn-VIDEO" onclick="filterChannel('VIDEO')">
+          <span>▶ Video Broadcasts</span>
+          <span class="badge">60FPS</span>
+        </button>
+        <button class="channel-btn" id="btn-CODE" onclick="filterChannel('CODE')">
+          <span>⌘ Code & App Design</span>
+          <span class="badge">REA</span>
+        </button>
+      </div>
+
+      <div class="lazarus-box">
+        <div class="side-label">Fraymus // Lazarus Engine</div>
+        <div class="stat-row"><span>Host Identity:</span><strong>EyeOverthink</strong></div>
+        <div class="stat-row"><span>Thermal Core:</span><strong id="thermalTemp">36.48°C</strong></div>
+        <div class="stat-row"><span>Phi Harmonic:</span><strong>1.6180339</strong></div>
+        <div class="stat-row"><span>Fossils Saved:</span><strong id="fossilCount">14</strong></div>
+        <div class="stat-row"><span>Backend Socket:</span><strong id="wsStatus">LOCAL_SIM</strong></div>
+      </div>
+
+      <div class="lazarus-box">
+        <div class="side-label">REA Pipeline Status</div>
+        <div style="color:#9fb1c9; font-size:0.71rem;">
+          1. Target Scoping [READY]<br/>
+          2. Surface Mapping [ACTIVE]<br/>
+          3. Feature Tracing [HOOKED]<br/>
+          4. Clean Rebuild [VERIFIED]
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER STAGE: UNIFIED PLAYER + REA WORKBENCH + FEED -->
+    <main class="center-stage">
+      <section class="stage-container">
+        <div class="viewport-wrapper">
+          <canvas id="stageCanvas" width="920" height="430"></canvas>
+
+          <!-- INTERACTIVE CODE & REA REVERSE-ENGINEERING WORKBENCH -->
+          <div id="codeWorkbench">
+            <div class="code-pane">
+              <div class="pane-header">
+                <span id="editorFileName">rebuild_feature.js</span>
+                <button class="pill-btn" style="padding:3px 9px;" onclick="executeCodeRebuild()">▶ Run & Verify Rebuild</button>
+              </div>
+              <textarea id="liveCodeEditor" spellcheck="false"></textarea>
+            </div>
+            <div class="code-pane" style="border-right:none;">
+              <div class="pane-header">
+                <span>REA Evidence Log & Verification Output</span>
+                <button class="pill-btn" style="padding:3px 9px;" onclick="toggleWorkbench(false)">Close IDE</button>
+              </div>
+              <div class="rea-trace-output" id="reaOutput"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="player-bar">
+          <button class="pill-btn" id="playPauseBtn" onclick="togglePlay()">⏸ PAUSE</button>
+          <span id="timeStamp">00:00 / 04:20</span>
+          <input type="range" class="scrubber" id="scrubber" min="0" max="100" value="0" oninput="seekStage(this.value)" />
+          <button class="pill-btn" id="workbenchToggleBtn" onclick="toggleWorkbench()">⌘ Toggle Code/REA IDE</button>
+          <button class="pill-btn" onclick="narrateCurrentItem()">🔊 Avatar Explain</button>
+        </div>
+
+        <div class="stage-meta">
+          <div>
+            <h1 class="stage-title" id="activeTitle">Select a transmission</h1>
+            <div class="stage-tags" id="activeTags"></div>
+          </div>
+          <div class="engagement-bar">
+            <button class="pill-btn" onclick="upvoteActive()">🔩 Tighten Screw (<span id="screwCount">412</span>)</button>
+            <button class="pill-btn" onclick="saveFossil()">🧬 Archive Fossil</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="feed-header">
+        <h2 style="font-size:1rem;">// ACTIVE TRANSMISSIONS</h2>
+        <span style="font-size:0.76rem; color:var(--text-muted);" id="activeFilterLabel">Showing: ALL CHANNELS</span>
+      </div>
+
+      <section class="media-grid" id="mediaGrid"></section>
+    </main>
+
+    <!-- RIGHT SIDEBAR: AVATAR VOICE & FACE OF THE BRAND -->
+    <aside class="avatar-studio">
+      <div class="side-label">Brand Host // Voice & Face</div>
+
+      <div class="avatar-stage" id="avatarContainer">
+        <div class="on-air-badge">
+          <div class="pulse-dot"></div>
+          <span id="avatarStateText">HOST STANDBY</span>
+        </div>
+        <canvas id="avatarCanvas" width="64" height="68"></canvas>
+        <img id="customAvatarImg" alt="EyeOverthink Brand Avatar" />
+      </div>
+
+      <label class="avatar-upload-label">
+        📥 Drop or Click to Load Raw Avatar PNG
+        <input type="file" accept="image/*" style="display:none" onchange="loadCustomAvatar(event)" />
+      </label>
+
+      <div class="speech-bubble" id="avatarSpeechBubble">
+        "Welcome to looseScrew. I'm the voice and face of the EyeOverthink network—spinning synth audio, 60FPS visualizers, and clean-room REA app rebuilds."
+      </div>
+
+      <div class="tts-box">
+        <input type="text" id="customSpeechInput" placeholder="Make your avatar say anything..." onkeydown="if(event.key==='Enter') speakCustomText()" />
+        <button class="pill-btn" onclick="speakCustomText()">SPEAK</button>
+      </div>
+
+      <div style="display:flex; gap:6px;">
+        <button class="pill-btn" style="flex:1" onclick="avatarQuickPitch('INTRO')">Brand Intro</button>
+        <button class="pill-btn" style="flex:1" onclick="avatarQuickPitch('REA')">REA Protocol</button>
+        <button class="pill-btn" style="flex:1" onclick="avatarQuickPitch('DROP')">Beat Drop</button>
+      </div>
+
+      <div class="side-label" style="margin-top:4px;">Akashic Record // Event Stream</div>
+      <div class="akashic-log" id="akashicLog"></div>
+    </aside>
+
+  </div>
+
+  <script>
+    const MEDIA_CATALOG = [
+      {
+        id: 'music-1',
+        channel: 'MUSIC',
+        title: 'Phi-Harmonic Sub-Bass (1.618 Hz Drift)',
+        duration: '03:44',
+        screws: 842,
+        bpm: 118,
+        tags: ['#WebAudioSynth', '#CyanRimLoFi', '#118BPM', '#LiveStems'],
+        voiceIntro: "Spinning up Phi-Harmonic Sub-Bass on the looseScrew Music Channel. Watch the 64-band cyan FFT spectrum lock to 118 BPM.",
+        synthNotes: [110, 130.81, 146.83, 164.81, 196.00, 220.00, 261.63, 293.66],
+        code: "// LIVE WEBAUDIO SYNTH PATCH (EDIT & RUN TO MUTATE SOUND)\nconst patch = {\n  waveform: 'sawtooth',\n  cutoffHz: 1618,\n  resonance: 6.4,\n  tempoBpm: 118,\n  phiRatio: 1.6180339\n};\nreturn 'Synth patch verified at ' + patch.tempoBpm + ' BPM | Filter: ' + patch.cutoffHz + 'Hz';",
+        reaTrace: "[AUDIO ENGINE TRACE]\n• Generator: WebAudio OscillatorNode + BiquadFilterNode\n• Real-time FFT: 128-bin frequency spectrum bound to Avatar cyan aura"
+      },
+      {
+        id: 'code-1',
+        channel: 'CODE',
+        title: 'REA Protocol: Reverse Engineer & Clean-Room Rebuild',
+        duration: '14:20',
+        screws: 1290,
+        bpm: 95,
+        tags: ['#REA_MCP', '#BinaryAnalysis', '#CleanRebuild', '#AppArchitecture'],
+        voiceIntro: "Welcome to the Code Forge. In this session we run the 8-step Reverse Engineer Anything protocol: mapping surface symbols, tracing UI triggers to core logic, and verifying our clean-room rebuild.",
+        synthNotes: [146.83, 174.61, 220.00, 293.66],
+        code: "// REA STEP 6 & 7: CLEAN-ROOM FEATURE RECONSTRUCTION & VERIFICATION\nfunction traceStatePipeline(uiPayload) {\n  if (!uiPayload || !uiPayload.action) throw new Error('Invalid trigger');\n  const timestamp = 1760896620;\n  const signature = uiPayload.action.split('').reduce((a, c) => ((a << 5) - a) + c.charCodeAt(0), 0);\n  return {\n    status: 'VERIFIED_ORIGINAL_REBUILD',\n    route: 'ipcMain://fraymus/dispatch',\n    hash: Math.abs(signature).toString(16).toUpperCase(),\n    epoch: timestamp\n  };\n}\nconst test1 = traceStatePipeline({ action: 'SYNC_NEURAL_BUFFER' });\nconst test2 = traceStatePipeline({ action: 'EXPORT_SVG_CENTERLINE' });\nreturn JSON.stringify({ test1, test2, verdict: 'PASS (100% parity)' }, null, 2);",
+        reaTrace: "[REA EVIDENCE LOG // TARGET: DESKTOP STUDIO APP]\n1. Target Scoping: State Sync & SVG Centerline IPC Pipeline\n2. Setup & Readiness: npx rea-agents setup (MCP active)\n3. Surface Mapping: 14 modules, 3 IPC channels flagged\n4. Feature Tracing: Button#export -> preload.bridge -> core.traceStatePipeline()\n5. Confidence Label: PROVEN (verified against HAR & runtime trace)"
+      },
+      {
+        id: 'video-1',
+        channel: 'VIDEO',
+        title: 'Fraymus Portal: Infinite 3D Neural Terrain Broadcast',
+        duration: '08:15',
+        screws: 965,
+        bpm: 124,
+        tags: ['#60FPS_Canvas', '#FraymusPortal', '#CyberpunkShader', '#Devlog'],
+        voiceIntro: "Broadcasting the Fraymus Portal infinite frame buffer. Every ridge in this wireframe horizon reacts to our audio bus and thermal core.",
+        synthNotes: [98.00, 123.47, 146.83, 196.00, 246.94],
+        code: "// LIVE SHADER GEOMETRY CONFIG\nconst terrainConfig = {\n  gridLines: 28,\n  horizonGlow: '#00f3ff',\n  elevationScale: 42.5,\n  cameraVelocity: 2.4\n};\nreturn 'Terrain matrix re-compiled: ' + terrainConfig.gridLines + ' scanlines active.';",
+        reaTrace: "[VIDEO STREAM TELEMETRY]\n• Render Pipeline: HTML5 2D/3D Projection Matrix @ 60FPS\n• Frame Sync: Locked to Avatar Host voice modulator"
+      },
+      {
+        id: 'music-2',
+        channel: 'MUSIC',
+        title: 'Lazarus Thermal Injection (Cyber-Electro Dub)',
+        duration: '04:12',
+        screws: 619,
+        bpm: 132,
+        tags: ['#ElectroDub', '#Bassline', '#LazarusEngine', '#HardwareJam'],
+        voiceIntro: "Dropping Lazarus Thermal Injection at 132 BPM. Heavy sawtooth basslines engineered right here in the looseScrew lab.",
+        synthNotes: [82.41, 98.00, 110.00, 123.47, 164.81, 196.00],
+        code: "// BASSLINE ARPEGGIATOR MUTATION\nconst arp = [82.41, 110.0, 164.81, 220.0].map(f => (f * 1.618).toFixed(2));\nreturn 'Harmonic frequencies injected: ' + arp.join('Hz, ') + 'Hz';",
+        reaTrace: "[AUDIO STREAM TELEMETRY]\n• Synthesis: Dual-oscillator detuned sub-bass + white-noise snare burst"
+      },
+      {
+        id: 'code-2',
+        channel: 'CODE',
+        title: 'SignCraft 3D: Neon Centerline Skeletonization Engine',
+        duration: '11:08',
+        screws: 1120,
+        bpm: 105,
+        tags: ['#AppDesign', '#SVGPaths', '#OpenSCAD', '#AlgorithmWalkthrough'],
+        voiceIntro: "Breaking down the SignCraft 3D centerline tracing algorithm—turning raw typography into 3D-printable neon LED channels.",
+        synthNotes: [130.81, 164.81, 196.00, 261.63],
+        code: "// MEDIAL AXIS SKELETONIZER GENERATOR\nfunction generateNeonCenterline(points) {\n  return points.map((pt, idx) => ({\n    step: idx,\n    svgCmd: idx === 0 ? 'M ' + pt[0] + ' ' + pt[1] : 'L ' + pt[0] + ' ' + pt[1],\n    glowClipMount: idx % 2 === 0\n  }));\n}\nconst samplePath = generateNeonCenterline([[10,20], [45,80], [90,80], [130,20]]);\nreturn JSON.stringify(samplePath, null, 2);",
+        reaTrace: "[APP DESIGN BLUEPRINT]\n• Output: Parametric SVG centerline + 80mm Spin-Elevator mount specs\n• Verification: Zero self-intersecting bezier nodes"
+      },
+      {
+        id: 'video-2',
+        channel: 'VIDEO',
+        title: 'Bare-Metal AGI Kernel: 22-Phase Boot Sequence Live',
+        duration: '19:50',
+        screws: 1540,
+        bpm: 110,
+        tags: ['#BareMetal', '#Java21', '#TesseractSynapse', '#SystemDesign'],
+        voiceIntro: "Full visual breakdown of the 22-phase boot sequence—from raw opcode lexing to hyper-dimensional swarm consensus.",
+        synthNotes: [110.00, 138.59, 164.81, 220.00],
+        code: "// BARE-METAL BOOT VERIFIER\nconst phases = ['BIOS_HANDOFF', 'HDC_8192_ALLOC', 'LAZARUS_THREAD', 'AKASHIC_MOUNT'];\nreturn phases.map((p, i) => 'Phase 0' + (i+1) + ': [' + p + '] -> ONLINE').join('\\n');",
+        reaTrace: "[KERNEL STREAM]\n• Memory Graph: SQLite + AkashicRecord Fossil Persistence"
+      }
+    ];
+
+    let currentFilter = 'ALL';
+    let activeItem = MEDIA_CATALOG[0];
+    let isPlaying = true;
+    let avatarTalking = false;
+    let mouthOpenness = 0;
+    let audioCtx = null;
+    let analyser = null;
+    let seqInterval = null;
+    let stepIndex = 0;
+    let frameTick = 0;
+    let fossilsSaved = 14;
+    let thermalCore = 36.48;
+
+    const avatarCanvas = document.getElementById('avatarCanvas');
+    const actx = avatarCanvas.getContext('2d');
+
+    function drawBrandAvatar() {
+      actx.clearRect(0, 0, 64, 68);
+      const bounce = avatarTalking ? Math.sin(frameTick * 0.35) * 1 : 0;
+      actx.fillStyle = '#00f3ff';
+      actx.fillRect(14, 6 + bounce, 36, 2);
+      actx.fillRect(10, 8 + bounce, 4, 4);
+      actx.fillRect(50, 8 + bounce, 4, 4);
+      actx.fillRect(8, 12 + bounce, 2, 16);
+      actx.fillRect(54, 12 + bounce, 2, 16);
+      actx.fillRect(2, 48, 14, 2);
+      actx.fillRect(48, 48, 14, 2);
+      actx.fillStyle = '#293829';
+      actx.fillRect(14, 8 + bounce, 36, 6);
+      actx.fillRect(10, 12 + bounce, 44, 15);
+      actx.fillStyle = '#182019';
+      actx.fillRect(12, 15 + bounce, 40, 12);
+      actx.fillStyle = '#9c5a3c';
+      actx.fillRect(17, 17 + bounce, 30, 26);
+      actx.fillStyle = '#b56c49';
+      actx.fillRect(22, 18 + bounce, 20, 6);
+      actx.fillStyle = '#141414';
+      actx.fillRect(20, 21 + bounce, 8, 2);
+      actx.fillRect(36, 21 + bounce, 8, 2);
+      actx.fillStyle = '#1b2226';
+      actx.fillRect(18, 23 + bounce, 12, 8);
+      actx.fillRect(34, 23 + bounce, 12, 8);
+      actx.fillRect(30, 25 + bounce, 4, 2);
+      actx.fillStyle = '#8b4e32';
+      actx.fillRect(19, 24 + bounce, 10, 6);
+      actx.fillRect(35, 24 + bounce, 10, 6);
+      actx.fillStyle = '#ffffff';
+      actx.fillRect(22, 26 + bounce, 4, 2);
+      actx.fillRect(38, 26 + bounce, 4, 2);
+      actx.fillStyle = '#090b0e';
+      actx.fillRect(23, 26 + bounce, 2, 2);
+      actx.fillRect(39, 26 + bounce, 2, 2);
+      actx.fillStyle = '#1e2224';
+      actx.fillRect(23, 34 + bounce, 18, 3);
+      actx.fillRect(22, 36 + bounce, 3, 3);
+      actx.fillRect(39, 36 + bounce, 3, 3);
+      actx.fillRect(24, 39 + bounce, 16, 6);
+      if (avatarTalking && mouthOpenness > 0.2) {
+        actx.fillStyle = '#00f3ff';
+        actx.fillRect(27, 36 + bounce, 10, Math.min(4, Math.ceil(mouthOpenness * 4)));
+      } else {
+        actx.fillStyle = '#bf7959';
+        actx.fillRect(26, 36 + bounce, 12, 2);
+      }
+      actx.fillStyle = '#f2f4f7';
+      actx.fillRect(18, 45, 28, 23);
+      actx.fillStyle = '#c5ccd6';
+      actx.fillRect(20, 45, 8, 6);
+      actx.fillRect(36, 45, 8, 6);
+      actx.fillStyle = '#2d3748';
+      actx.fillRect(31, 52, 2, 2);
+      actx.fillRect(31, 59, 2, 2);
+      actx.fillRect(31, 65, 2, 2);
+      actx.fillStyle = '#293829';
+      actx.fillRect(2, 50, 17, 18);
+      actx.fillRect(45, 50, 17, 18);
+    }
+
+    function loadCustomAvatar(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.getElementById('customAvatarImg');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        logAkashic("Custom pixel avatar PNG mounted into Broadcast Host.");
+        speakText("Custom avatar portrait locked in. I am live on looseScrew.");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function speakText(text) {
+      document.getElementById('avatarSpeechBubble').textContent = '"' + text + '"';
+      document.getElementById('avatarStateText').textContent = 'ON AIR // SPEAKING';
+      avatarTalking = true;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.pitch = 0.92;
+        utter.rate = 1.02;
+        utter.onboundary = () => { mouthOpenness = 0.4 + Math.random() * 0.6; };
+        utter.onend = () => {
+          avatarTalking = false;
+          mouthOpenness = 0;
+          document.getElementById('avatarStateText').textContent = 'HOST STANDBY';
+        };
+        window.speechSynthesis.speak(utter);
+      } else {
+        setTimeout(() => {
+          avatarTalking = false;
+          document.getElementById('avatarStateText').textContent = 'HOST STANDBY';
+        }, 3500);
+      }
+      logAkashic('Avatar Voice: "' + text.slice(0, 42) + '..."');
+    }
+
+    function speakCustomText() {
+      const input = document.getElementById('customSpeechInput');
+      if (!input.value.trim()) return;
+      speakText(input.value.trim());
+      input.value = '';
+    }
+
+    function avatarQuickPitch(mode) {
+      if (mode === 'INTRO') {
+        speakText("Yo, welcome to looseScrew by EyeOverthink—where original synth music, 60 frame video shaders, and bare-metal code collide.");
+      } else if (mode === 'REA') {
+        speakText("Running the REA Reverse Engineer Anything pipeline: scope target, map surface symbols, trace UI to core logic, and verify our clean-room rebuild.");
+      } else if (mode === 'DROP') {
+        initAudioEngine();
+        speakText("Dropping the Phi-Harmonic bassline right now. Watch the cyan spectrum climb.");
+      }
+    }
+
+    function narrateCurrentItem() { speakText(activeItem.voiceIntro); }
+
+    function initAudioEngine() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 128;
+        analyser.connect(audioCtx.destination);
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      startSequencer();
+    }
+
+    function startSequencer() {
+      if (seqInterval) clearInterval(seqInterval);
+      const stepMs = (60 / (activeItem.bpm || 120)) * 500;
+      seqInterval = setInterval(() => {
+        if (!isPlaying || !audioCtx) return;
+        const notes = activeItem.synthNotes || [110, 146.83, 164.81, 220];
+        const freq = notes[stepIndex % notes.length];
+        stepIndex++;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = activeItem.channel === 'MUSIC' ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.11, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (stepMs / 1000) * 0.9);
+        osc.connect(gain);
+        gain.connect(analyser);
+        osc.start();
+        osc.stop(audioCtx.currentTime + (stepMs / 1000));
+        if (avatarTalking) mouthOpenness = Math.random();
+      }, stepMs);
+    }
+
+    const stageCanvas = document.getElementById('stageCanvas');
+    const sctx = stageCanvas.getContext('2d');
+    const freqData = new Uint8Array(64);
+
+    function renderStageLoop() {
+      frameTick++;
+      drawBrandAvatar();
+      if (analyser && isPlaying) analyser.getByteFrequencyData(freqData);
+      const w = stageCanvas.width;
+      const h = stageCanvas.height;
+      sctx.fillStyle = '#04060a';
+      sctx.fillRect(0, 0, w, h);
+      sctx.strokeStyle = 'rgba(0, 243, 255, 0.22)';
+      sctx.lineWidth = 1;
+      const horizon = h * 0.52;
+      for (let i = -12; i <= 12; i++) {
+        sctx.beginPath();
+        sctx.moveTo(w / 2 + i * 25, horizon);
+        sctx.lineTo(w / 2 + i * 140, h);
+        sctx.stroke();
+      }
+      const offset = (frameTick * (isPlaying ? 2.5 : 0)) % 28;
+      for (let y = horizon; y < h; y += 28) {
+        const py = y + offset * ((y - horizon) / (h - horizon));
+        sctx.beginPath();
+        sctx.moveTo(0, py);
+        sctx.lineTo(w, py);
+        sctx.stroke();
+      }
+      if (activeItem.channel === 'MUSIC') {
+        const barWidth = (w - 120) / 48;
+        for (let i = 0; i < 48; i++) {
+          const val = isPlaying ? (freqData[i] || (Math.sin(frameTick * 0.08 + i * 0.4) + 1) * 65) : 12;
+          const barH = (val / 255) * 210;
+          sctx.fillStyle = i % 2 === 0 ? '#00f3ff' : '#2d8a6e';
+          sctx.fillRect(60 + i * barWidth, horizon - barH + 30, barWidth - 4, barH);
+        }
+      } else if (activeItem.channel === 'VIDEO') {
+        sctx.save();
+        sctx.translate(w / 2, horizon - 45);
+        sctx.strokeStyle = '#00f3ff';
+        sctx.lineWidth = 2;
+        const r = 75 + Math.sin(frameTick * 0.05) * 14;
+        for (let k = 0; k < 3; k++) {
+          sctx.rotate(frameTick * 0.012 + k);
+          sctx.strokeRect(-r / 2, -r / 2, r, r);
+        }
+        sctx.restore();
+      } else if (activeItem.channel === 'CODE') {
+        const nodes = ['UI Trigger', 'Preload Bridge', 'IPC Channel', 'Core Rebuild', 'Unit Test PASS'];
+        nodes.forEach((label, idx) => {
+          const nx = 130 + idx * 165;
+          const ny = horizon - 50 + Math.sin(frameTick * 0.06 + idx) * 12;
+          if (idx < nodes.length - 1) {
+            sctx.strokeStyle = '#00f3ff';
+            sctx.beginPath();
+            sctx.moveTo(nx + 45, ny);
+            sctx.lineTo(nx + 120, horizon - 50 + Math.sin(frameTick * 0.06 + idx + 1) * 12);
+            sctx.stroke();
+          }
+          sctx.fillStyle = '#0e1726';
+          sctx.fillRect(nx - 55, ny - 22, 110, 44);
+          sctx.strokeStyle = '#00f3ff';
+          sctx.strokeRect(nx - 55, ny - 22, 110, 44);
+          sctx.fillStyle = '#e6f1ff';
+          sctx.font = '11px monospace';
+          sctx.fillText(label, nx - 44, ny + 4);
+        });
+      }
+      sctx.fillStyle = '#00f3ff';
+      sctx.font = 'bold 13px monospace';
+      sctx.fillText('// LOOSESCREW_' + activeItem.channel + '_STREAM :: ' + activeItem.title, 24, 34);
+      sctx.fillStyle = '#8fa4c4';
+      sctx.font = '12px monospace';
+      sctx.fillText('BPM: ' + activeItem.bpm + ' | PHI_LOCK: 1.618 | HOST: EYEOVERTHINK', 24, 54);
+      requestAnimationFrame(renderStageLoop);
+    }
+
+    function selectTransmission(id, autoSpeak = true) {
+      const found = MEDIA_CATALOG.find(item => item.id === id);
+      if (!found) return;
+      activeItem = found;
+      document.getElementById('activeTitle').textContent = activeItem.title;
+      document.getElementById('screwCount').textContent = activeItem.screws;
+      document.getElementById('activeTags').innerHTML = activeItem.tags.map(t => '<span>' + t + '</span>').join('');
+      document.getElementById('liveCodeEditor').value = activeItem.code;
+      document.getElementById('reaOutput').textContent = activeItem.reaTrace;
+      document.getElementById('editorFileName').textContent = activeItem.id + '_rebuild.js';
+      toggleWorkbench(activeItem.channel === 'CODE');
+      initAudioEngine();
+      if (autoSpeak) speakText(activeItem.voiceIntro);
+      logAkashic('Switched stream -> [' + activeItem.channel + '] ' + activeItem.title);
+    }
+
+    function filterChannel(channel) {
+      currentFilter = channel;
+      ['ALL', 'MUSIC', 'VIDEO', 'CODE'].forEach(c => {
+        const btn = document.getElementById('btn-' + c);
+        if (btn) btn.classList.toggle('active', c === channel);
+      });
+      document.getElementById('activeFilterLabel').textContent = 'Showing: ' + channel + ' CHANNEL';
+      renderMediaGrid();
+    }
+
+    function renderMediaGrid() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const grid = document.getElementById('mediaGrid');
+      const filtered = MEDIA_CATALOG.filter(item => {
+        const matchChannel = currentFilter === 'ALL' || item.channel === currentFilter;
+        const matchQuery = item.title.toLowerCase().includes(q) || item.tags.join(' ').toLowerCase().includes(q);
+        return matchChannel && matchQuery;
+      });
+      grid.innerHTML = filtered.map(item => `
+        <article class="media-card" onclick="selectTransmission('${item.id}')">
+          <div class="card-thumb">
+            <span class="card-type-pill">${item.channel}</span>
+            <div style="font-family:monospace; color:#00f3ff; font-size:0.8rem; text-align:center; padding:12px;">
+              ${item.channel === 'MUSIC' ? '♫ SYNTH WAVEFORM' : item.channel === 'VIDEO' ? '▶ 60FPS SHADER' : '⌘ REA + CODE IDE'}
+            </div>
+            <span class="card-duration">${item.duration}</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <div class="card-title">${item.title}</div>
+              <div style="font-family:monospace; font-size:0.7rem; color:#00f3ff; margin-bottom:8px;">
+                ${item.tags.slice(0, 3).join(' ')}
+              </div>
+            </div>
+            <div class="card-meta">
+              <span>EyeOverthink</span>
+              <span>🔩 ${item.screws} screws</span>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function toggleWorkbench(forceState) {
+      const wb = document.getElementById('codeWorkbench');
+      const show = typeof forceState === 'boolean' ? forceState : !wb.classList.contains('visible');
+      wb.classList.toggle('visible', show);
+    }
+
+    function executeCodeRebuild() {
+      const src = document.getElementById('liveCodeEditor').value;
+      const out = document.getElementById('reaOutput');
+      try {
+        const fn = new Function(src);
+        const result = fn();
+        out.textContent = activeItem.reaTrace + '\n\n[LIVE EXECUTION VERIFIED @ ' + new Date().toLocaleTimeString() + ']\n' + result;
+        triggerThermalInjection();
+        speakText("Rebuild executed and verified. All test assertions passed.");
+      } catch (err) {
+        out.textContent = '[REBUILD EXCEPTION]\n' + err.message;
+        speakText("Hold up, caught a syntax or runtime exception in the rebuild.");
+      }
+    }
+
+    function togglePlay() {
+      initAudioEngine();
+      isPlaying = !isPlaying;
+      document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸ PAUSE' : '▶ PLAY';
+    }
+
+    function seekStage(val) {
+      const mins = Math.floor((val / 100) * 4);
+      const secs = Math.floor(((val / 100) * 260) % 60).toString().padStart(2, '0');
+      document.getElementById('timeStamp').textContent = '0' + mins + ':' + secs + ' / ' + activeItem.duration;
+    }
+
+    function upvoteActive() {
+      activeItem.screws++;
+      document.getElementById('screwCount').textContent = activeItem.screws;
+      renderMediaGrid();
+      logAkashic('Tightened screw on "' + activeItem.title + '" -> ' + activeItem.screws);
+    }
+
+    function triggerThermalInjection() {
+      thermalCore = +(thermalCore + 0.42).toFixed(2);
+      document.getElementById('thermalTemp').textContent = thermalCore + '°C';
+      logAkashic('Thermal Injection triggered -> Core at ' + thermalCore + '°C');
+    }
+
+    function saveFossil() {
+      fossilsSaved++;
+      document.getElementById('fossilCount').textContent = fossilsSaved;
+      logAkashic('Temporal Fossil #' + fossilsSaved + ' archived to AkashicRecord.');
+      speakText('Temporal Fossil number ' + fossilsSaved + ' preserved in the Akashic Archive.');
+    }
+
+    function openUploadModal() {
+      const title = prompt("Enter new transmission title for looseScrew:");
+      if (!title) return;
+      const channel = (prompt("Channel (MUSIC, VIDEO, or CODE):", "CODE") || "CODE").toUpperCase();
+      const newItem = {
+        id: 'custom-' + Date.now(),
+        channel: ['MUSIC', 'VIDEO', 'CODE'].includes(channel) ? channel : 'CODE',
+        title,
+        duration: '05:00',
+        screws: 1,
+        bpm: 120,
+        tags: ['#EyeOverthink', '#CustomIngest', '#Live'],
+        voiceIntro: 'New transmission ingested into looseScrew: ' + title + '.',
+        synthNotes: [130.81, 164.81, 196.00, 261.63],
+        code: '// Custom Ingested Module: ' + title + '\nreturn "Module online.";',
+        reaTrace: '[UNIVERSAL ABSORBER]\nIngested by EyeOverthink at ' + new Date().toISOString()
+      };
+      MEDIA_CATALOG.unshift(newItem);
+      document.getElementById('count-ALL').textContent = MEDIA_CATALOG.length;
+      renderMediaGrid();
+      selectTransmission(newItem.id);
+    }
+
+    function logAkashic(msg) {
+      const box = document.getElementById('akashicLog');
+      const div = document.createElement('div');
+      div.className = 'akashic-entry';
+      div.innerHTML = '<span>[' + new Date().toLocaleTimeString() + ']</span> ' + msg;
+      box.prepend(div);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderMediaGrid();
+      selectTransmission(MEDIA_CATALOG[0].id, false);
+      logAkashic("Fraymus Portal & Avatar Host initialized.");
+      renderStageLoop();
+    });
+  </script>
+</body>
+</html>
